@@ -13,3 +13,14 @@ class Places(models.Model):
 
     def __str__(self):
         return f'{self.title}'
+
+
+class PlacesImages(models.Model):
+    place = models.ForeignKey(
+        Places,
+        on_delete=models.CASCADE,
+    )
+    imgs = models.ImageField()
+
+    def __str__(self):
+        return f'{self.id} {self.place}'
