@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.fields.files import ImageFileDescriptor
+from django.conf import settings
 
 
 class Places(models.Model):
@@ -19,8 +19,13 @@ class PlacesImages(models.Model):
     place = models.ForeignKey(
         Places,
         on_delete=models.CASCADE,
+        related_name='images_places'
     )
     imgs = models.ImageField()
 
     def __str__(self):
         return f'{self.id} {self.place}'
+
+    @property
+    def get_absolute_image_url(self):
+        return f'{settings.MEDIA_ROOT[:-1]}{self.imgs.url}'
