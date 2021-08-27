@@ -1,5 +1,4 @@
 from django.db import models
-from django.conf import settings
 
 
 class Places(models.Model):
@@ -13,6 +12,10 @@ class Places(models.Model):
 
     def __str__(self):
         return f'{self.title}'
+
+    class Meta:
+        verbose_name = 'Место'
+        verbose_name_plural = 'Места'
 
 
 class PlacesImages(models.Model):
@@ -35,3 +38,7 @@ class PlacesImages(models.Model):
     @property
     def get_absolute_image_url(self):
         return f'{self.imgs.url}'
+
+    class Meta:
+        verbose_name = 'Фотография'
+        verbose_name_plural = 'Фотографии'
