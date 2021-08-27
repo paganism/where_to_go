@@ -1,4 +1,5 @@
 from django.db import models
+from tinymce.models import HTMLField
 
 
 class Places(models.Model):
@@ -7,7 +8,7 @@ class Places(models.Model):
         db_index=True
     )
     description_short = models.TextField(blank=True)
-    description_long = models.TextField(blank=True, null=True)
+    description_long = HTMLField(blank=True, null=True)
     coordinates = models.JSONField()
 
     def __str__(self):
