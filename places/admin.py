@@ -2,15 +2,15 @@ from django.contrib import admin
 from .models import Places, PlacesImages
 
 
+class ImagesInline(admin.TabularInline):
+    model = PlacesImages
+
+
+@admin.register(Places)
 class PlacesAdmin(admin.ModelAdmin):
-    pass
+    inlines = [ImagesInline]
 
 
-admin.site.register(Places, PlacesAdmin)
-
-
+@admin.register(PlacesImages)
 class PlacesImagesAdmin(admin.ModelAdmin):
     pass
-
-
-admin.site.register(PlacesImages, PlacesImagesAdmin)

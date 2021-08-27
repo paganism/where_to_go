@@ -30,6 +30,7 @@ def index(request):
         geo_json['features'].append(feature)
 
     context = {'geo_json': geo_json}
+    print(geo_json)
 
     return render(request, 'index.html', context)
 
@@ -40,7 +41,7 @@ def get_place_by_id(request, place_id):
         Places.objects.prefetch_related('images_places'),
         id=place_id
         )
-    place_images_urls = [i.get_absolute_image_url for i in place.images_places.all()]
+    place_images_urls = [i.get_absolute_image_url for i in place.images_places.all().order_by('position')]
     
     pl = {
         'title': place.title,

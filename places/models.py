@@ -21,11 +21,17 @@ class PlacesImages(models.Model):
         on_delete=models.CASCADE,
         related_name='images_places'
     )
-    imgs = models.ImageField()
+    imgs = models.ImageField(verbose_name='Картинка')
+    position = models.IntegerField(
+        verbose_name='Позиция',
+        blank=True,
+        null=True,
+        db_index=True
+        )
 
     def __str__(self):
         return f'{self.id} {self.place}'
 
     @property
     def get_absolute_image_url(self):
-        return f'{settings.MEDIA_ROOT[:-1]}{self.imgs.url}'
+        return f'{self.imgs.url}'
