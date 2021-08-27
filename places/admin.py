@@ -2,12 +2,14 @@ from django.contrib import admin
 from .models import Places, PlacesImages
 from django.utils.html import mark_safe, format_html
 from django.conf import settings
+from adminsortable2.admin import SortableInlineAdminMixin
 
 
-class ImagesInline(admin.TabularInline):
+class ImagesInline(SortableInlineAdminMixin, admin.TabularInline):
     model = PlacesImages
     readonly_fields = ['get_preview', ]
-    fields = ('imgs', 'get_preview', 'position')
+    fields = ('imgs', 'get_preview', )
+    extra = 1
 
     @staticmethod
     def get_new_dimensions(width, height, height_restriction):

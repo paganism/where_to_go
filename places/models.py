@@ -29,7 +29,8 @@ class PlacesImages(models.Model):
         verbose_name='Позиция',
         blank=True,
         null=True,
-        db_index=True
+        db_index=True,
+        default=1
         )
 
     def __str__(self):
@@ -42,3 +43,4 @@ class PlacesImages(models.Model):
     class Meta:
         verbose_name = 'Фотография'
         verbose_name_plural = 'Фотографии'
+        ordering = ('position', )
