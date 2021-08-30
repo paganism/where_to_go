@@ -30,7 +30,6 @@ def index(request):
         geo_json['features'].append(feature)
 
     context = {'geo_json': geo_json}
-    print(geo_json)
 
     return render(request, 'index.html', context)
 
