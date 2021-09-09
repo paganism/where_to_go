@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from places.models import Places
+from places.models import Place
 from django.shortcuts import get_object_or_404
 from django.http.response import JsonResponse
 from django.urls import reverse
@@ -12,13 +12,15 @@ def index(request):
         "features": []
     }
 
-    for place in Places.objects.all():
+    for place in Place.objects.all():
 
         feature = {
             "type": "Feature",
             "geometry": {
                 "type": "Point",
-                "coordinates": [place.coordinates['lng'], place.coordinates['lat']]
+                "coordinates": [
+                    place.coordinates['lng'],
+                    place.coordinates['lat']]
             },
             "properties": {
                 "title": place.title,
@@ -35,23 +37,24 @@ def index(request):
 
 
 def get_place_by_id(request, place_id):
-        
     place = get_object_or_404(
-        Places.objects.prefetch_related('images_places'),
+        Place.objects.prefetch_related('place_images'),
         id=place_id
         )
-    place_images_urls = [i.get_absolute_image_url for i in place.images_places.all().order_by('position')]
-    
+    place_images_urls = [
+        i.img.url for i in place.place_images.all().order_by('position')
+        ]
+
     pl = {
         'title': place.title,
-        'imgs':place_images_urls,
-        'description_short':place.description_short,
-        'description_long':place.description_long,
+        'imgs': place_images_urls,
+        'description_short': place.short_description,
+        'description_long': place.long_description,
         'coordinates': place.coordinates
         }
 
     return JsonResponse(
         pl,
-        safe=False, 
+        safe=False,
         json_dumps_params={'ensure_ascii': False, 'indent': 4}
         )

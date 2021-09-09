@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from places.models import Places, PlacesImages
+from places.models import Place, PlaceImage
 import requests
 from django.core.files.base import ContentFile
 
@@ -16,21 +16,26 @@ class Command(BaseCommand):
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
 
-        place, created = Places.objects.get_or_create(
+        place_to_save = {}
+        place_to_save['short_description'] = response['description_short']
+        place_to_save['long_description'] = response['description_long']
+        place_to_save['coordinates'] = response['coordinates']
+
+        place, created = Place.objects.get_or_create(
             title=response['title'],
-            description_short=response['description_short'],
-            description_long=response['description_long'],
-            coordinates=response['coordinates']
+            defaults=place_to_save
         )
 
-        if created:
-            for image_link in enumerate(response['imgs']):
-                response_img = requests.get(image_link[1])
-                response_img.raise_for_status()
+        if not created:
+            return
 
-                new_image = PlacesImages(place=place)
-                new_image.imgs.save(
-                    f'{image_link[0]}',
-                    ContentFile(response_img.content),
-                    save=True
-                    )
+        for image_part_name, image_link in enumerate(response['imgs']):
+            response_img = requests.get(image_link)
+            response_img.raise_for_status()
+
+            new_image = PlaceImage(place=place)
+            new_image.img.save(
+                f'{image_part_name}',
+                ContentFile(response_img.content),
+                save=True
+                )

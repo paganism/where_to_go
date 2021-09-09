@@ -1,14 +1,14 @@
 from django.contrib import admin
-from .models import Places, PlacesImages
+from .models import Place, PlaceImage
 from django.utils.html import mark_safe, format_html
 from django.conf import settings
 from adminsortable2.admin import SortableInlineAdminMixin
 
 
-class ImagesInline(SortableInlineAdminMixin, admin.TabularInline):
-    model = PlacesImages
+class ImageInline(SortableInlineAdminMixin, admin.TabularInline):
+    model = PlaceImage
     readonly_fields = ['get_preview', ]
-    fields = ('imgs', 'get_preview', )
+    fields = ('img', 'get_preview', )
     extra = 1
 
     @staticmethod
@@ -23,26 +23,25 @@ class ImagesInline(SortableInlineAdminMixin, admin.TabularInline):
 
     def get_preview(self, obj):
         prev_width, prev_height = self.get_new_dimensions(
-            obj.imgs.width,
-            obj.imgs.height,
+            obj.img.width,
+            obj.img.height,
             settings.IMAGE_PREVIEW_HEIGHT
             )
         return format_html(
-            mark_safe(
-                '<img src="{url}" width="{width}" height={height} />'.format(
-                    url=obj.imgs.url,
-                    width=prev_width,
-                    height=prev_height,
-                    )
-                )
-            )
+            '<img src="{}" width="{}" height={} />',
+                obj.img.url,
+                prev_width,
+                prev_height,
+        )
 
 
-@admin.register(Places)
-class PlacesAdmin(admin.ModelAdmin):
-    inlines = [ImagesInline]
+@admin.register(Place)
+class PlaceAdmin(admin.ModelAdmin):
+    inlines = [ImageInline]
+    search_fields = ['title']
 
 
-@admin.register(PlacesImages)
-class PlacesImagesAdmin(admin.ModelAdmin):
-    pass
+@admin.register(PlaceImage)
+class PlaceImageAdmin(admin.ModelAdmin):
+    raw_id_fields = ('place', )
+    autocomplete_fields = ['place', ]

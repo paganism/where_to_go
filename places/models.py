@@ -2,44 +2,50 @@ from django.db import models
 from tinymce.models import HTMLField
 
 
-class Places(models.Model):
+class Place(models.Model):
     title = models.CharField(
         max_length=100,
-        db_index=True
+        db_index=True,
+        null=True,
+        blank=True,
+        verbose_name='Интересные места'
     )
-    description_short = models.TextField(blank=True)
-    description_long = HTMLField(blank=True, null=True)
-    coordinates = models.JSONField()
+    short_description = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name='Краткое описание'
+        )
+    long_description = HTMLField(
+        blank=True,
+        null=True,
+        verbose_name='Полное описание'
+        )
+    coordinates = models.JSONField(verbose_name='Координаты')
 
-    def __str__(self):
-        return f'{self.title}'
+    def __str__(self): return self.title
 
     class Meta:
         verbose_name = 'Место'
         verbose_name_plural = 'Места'
 
 
-class PlacesImages(models.Model):
+class PlaceImage(models.Model):
     place = models.ForeignKey(
-        Places,
+        Place,
         on_delete=models.CASCADE,
-        related_name='images_places'
+        related_name='place_images',
+        verbose_name='Места'
     )
-    imgs = models.ImageField(verbose_name='Картинка')
+    img = models.ImageField(verbose_name='Картинка')
     position = models.IntegerField(
         verbose_name='Позиция',
         blank=True,
         null=True,
         db_index=True,
-        default=1
         )
 
     def __str__(self):
         return f'{self.id} {self.place}'
-
-    @property
-    def get_absolute_image_url(self):
-        return f'{self.imgs.url}'
 
     class Meta:
         verbose_name = 'Фотография'
