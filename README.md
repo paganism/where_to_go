@@ -13,6 +13,23 @@
 * Откройте в браузере
 * Для загрузки интересных мест из json-файла используйте команду `python manage.py load_place файл.json`
 
+> Пример json-файла для вставки:
+```
+{
+    "title": "Название",
+    "imgs": [
+        "https://image1.jpg",
+        "https://image2.jpg",
+    ],
+    "description_short": "Кратко",
+    "description_long": "<p>Пдробно. <a class=\"external-link\" href=\"https://example.com \" target=\"_blank\">Ссылка</a></p>",
+    "coordinates": {
+        "lng": "37.6",
+        "lat": "55.7"
+    }
+}
+```
+
 ## Настройки окружения. Пример:
 
 ```

@@ -16,10 +16,11 @@ class Command(BaseCommand):
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
 
-        place_to_save = {}
-        place_to_save['short_description'] = response['description_short']
-        place_to_save['long_description'] = response['description_long']
-        place_to_save['coordinates'] = response['coordinates']
+        place_to_save = {
+            'short_description': response['description_short'],
+            'long_description': response['description_long'],
+            'coordinates': response['coordinates']
+        }
 
         place, created = Place.objects.get_or_create(
             title=response['title'],
@@ -38,4 +39,4 @@ class Command(BaseCommand):
                 f'{image_part_name}',
                 ContentFile(response_img.content),
                 save=True
-                )
+            )
